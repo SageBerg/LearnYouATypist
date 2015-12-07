@@ -6,6 +6,8 @@ public class LearnYouATypist
 {
 
     private static int LINE_LENGTH = 80;
+    private static long WORD_LENGTH = 5;
+    private static long MINUTE = 60000;
     
     public static void main (String args[]) 
     {
@@ -13,14 +15,30 @@ public class LearnYouATypist
         String prompt;
         String response;
 
+        int characters_typed = 0;
+        int errors = 0;
+        long start_time = System.currentTimeMillis();
+        long stop_time;
+        long time_taken;
+        long words_per_minute = 0;
+
         try {
             FileInputStream stream = new FileInputStream("test.txt"); 
             while (stream.available() > 0)
             {
                 prompt = output_line(stream);
                 response = scanner.nextLine() + '\n';
-                System.out.println(count_errors(prompt, response));
+                characters_typed += response.length();
+                errors += count_errors(prompt, response);
+                System.out.println();
             }
+            stop_time = System.currentTimeMillis();
+            time_taken = stop_time - start_time;
+            System.out.println(time_taken);
+            words_per_minute = (characters_typed / WORD_LENGTH) / (time_taken / MINUTE);
+            System.out.println(errors + " errors");
+            System.out.println(words_per_minute + " words_per_minute");
+            
         } catch (Exception e) {
             e.printStackTrace();            
         } finally {
@@ -30,6 +48,7 @@ public class LearnYouATypist
             }
             */
         }
+
     }
 
     private static String output_line(FileInputStream stream) throws IOException
