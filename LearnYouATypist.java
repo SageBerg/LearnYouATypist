@@ -11,6 +11,7 @@ public class LearnYouATypist
 
     public static void main (String args[]) 
     {
+
         Scanner scanner = new Scanner(System.in);
         String prompt;
         String response;
@@ -54,19 +55,27 @@ public class LearnYouATypist
 
     private static String output_line(FileInputStream stream) throws IOException
     {
-        char c;
+        char c = ' ';
         int i;
         int count = 0;
         String prompt = "";
-        while ((i = stream.read()) != -1 && count <= LINE_LENGTH)
+        while ((count <= LINE_LENGTH || !Character.isWhitespace(c))
+               && (i = stream.read()) != -1)
         {
             c = (char) i;
+            if (c == '\n') {
+                System.out.print((char) 182);
+            }
             System.out.print(c);
             prompt += c;
             if (c == '\n') {
                 break;
             }
             count += 1;
+        }
+        if (c != '\n') {
+            System.out.println((char) 182);
+            prompt += '\n';
         }
         return prompt;
     }
