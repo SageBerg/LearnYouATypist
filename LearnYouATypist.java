@@ -6,9 +6,9 @@ public class LearnYouATypist
 {
 
     private static int LINE_LENGTH = 80;
-    private static long WORD_LENGTH = 5;
-    private static long MINUTE = 60000;
-    
+    private static double WORD_LENGTH = 5.0;
+    private static double MINUTE = 60000.0;
+
     public static void main (String args[]) 
     {
         Scanner scanner = new Scanner(System.in);
@@ -20,7 +20,7 @@ public class LearnYouATypist
         long start_time = System.currentTimeMillis();
         long stop_time;
         long time_taken;
-        long words_per_minute = 0;
+        double words_per_minute = 0.0;
 
         try {
             FileInputStream stream = new FileInputStream("test.txt"); 
@@ -34,8 +34,9 @@ public class LearnYouATypist
             }
             stop_time = System.currentTimeMillis();
             time_taken = stop_time - start_time;
-            System.out.println(time_taken);
-            words_per_minute = (characters_typed / WORD_LENGTH) / (time_taken / MINUTE);
+            double time = (double) time_taken;
+            double chars = (double) characters_typed;
+            words_per_minute = (chars / WORD_LENGTH) / (time / MINUTE);
             System.out.println(errors + " errors");
             System.out.println(words_per_minute + " words_per_minute");
             
