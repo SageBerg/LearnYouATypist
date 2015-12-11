@@ -22,9 +22,10 @@ public class LearnYouATypist
         long stop_time;
         long time_taken;
         double words_per_minute = 0.0;
+        FileInputStream stream = null;
 
         try {
-            FileInputStream stream = new FileInputStream("test.txt"); 
+            stream = new FileInputStream("test.txt"); 
             while (stream.available() > 0)
             {
                 prompt = output_line(stream);
@@ -35,20 +36,25 @@ public class LearnYouATypist
             }
             stop_time = System.currentTimeMillis();
             time_taken = stop_time - start_time;
+
             double time = (double) time_taken;
             double chars = (double) characters_typed;
             words_per_minute = (chars / WORD_LENGTH) / (time / MINUTE);
-            System.out.println(errors + " errors");
-            System.out.println(words_per_minute + " words_per_minute");
-            
+
+            System.out.println("errors: " + errors);
+            System.out.println("error rate: " + ((double) errors) / chars);
+            System.out.println("words per minute: " + words_per_minute);
+
         } catch (Exception e) {
             e.printStackTrace();            
         } finally {
-            /*
             if (stream != null) {
-                stream.close();
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
-            */
         }
 
     }
