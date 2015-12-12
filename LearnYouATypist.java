@@ -1,10 +1,11 @@
-import java.util.Scanner;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class LearnYouATypist 
 {
-
+    private static int CRLF_SYMBOL = 182;
     private static int LINE_LENGTH = 80;
     private static double WORD_LENGTH = 5.0;
     private static double MINUTE = 60000.0;
@@ -23,6 +24,7 @@ public class LearnYouATypist
         long time_taken;
         double words_per_minute = 0.0;
         FileInputStream stream = null;
+        ArrayList<String> error_comparisons = new ArrayList<String>();
 
         try {
             stream = new FileInputStream("test.txt"); 
@@ -32,6 +34,9 @@ public class LearnYouATypist
                 response = scanner.nextLine() + '\n';
                 characters_typed += response.length();
                 errors += count_errors(prompt, response);
+                error_comparisons = add_to_error_comparisons(prompt,
+                                                             response,
+                                                             error_comparisons);
                 System.out.println();
             }
             stop_time = System.currentTimeMillis();
@@ -44,6 +49,13 @@ public class LearnYouATypist
             System.out.println("errors: " + errors);
             System.out.println("error rate: " + ((double) errors) / chars);
             System.out.println("words per minute: " + words_per_minute);
+            if (error_comparisons.size() > 0) {
+                System.out.println("summary of mistakes: ");
+                for (int i = 0; i < error_comparisons.size(); i += 2) {
+                    System.out.println(error_comparisons.get(i));
+                    System.out.println(error_comparisons.get(i + 1));
+                }
+            }
 
         } catch (Exception e) {
             e.printStackTrace();            
@@ -70,7 +82,7 @@ public class LearnYouATypist
         {
             c = (char) i;
             if (c == '\n') {
-                System.out.print((char) 182);
+                System.out.print((char) CRLF_SYMBOL);
             }
             System.out.print(c);
             prompt += c;
@@ -80,7 +92,7 @@ public class LearnYouATypist
             count += 1;
         }
         if (c != '\n') {
-            System.out.println((char) 182);
+            System.out.println((char) CRLF_SYMBOL);
             prompt += '\n';
         }
         return prompt;
@@ -97,6 +109,24 @@ public class LearnYouATypist
         }
         errors += Math.abs(prompt.length() - response.length());
         return errors;
+    }
+
+    //returns a list of words typed incorrectly so the user can see what kinds
+    //  mistakes they are making
+    private static ArrayList<String> add_to_error_comparisons(String prompt,
+                                                       String response,
+                                                       ArrayList<String> list)
+    {
+        String[] split_prompt = prompt.split(" "); 
+        String[] split_response = response.split(" "); 
+        for (int i = 0; i < Math.min(split_prompt.length, split_response.length); i++) 
+        {
+            if (!split_prompt[i].equals(split_response[i])) {
+                list.add(split_prompt[i]);
+                list.add(split_response[i]);
+            }
+        }
+        return list;
     }
 
 }
