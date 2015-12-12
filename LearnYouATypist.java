@@ -18,7 +18,6 @@ public class LearnYouATypist
         String response;
 
         int characters_typed = 0;
-        int errors = 0;
         long start_time = System.currentTimeMillis();
         long stop_time;
         long time_taken;
@@ -33,7 +32,6 @@ public class LearnYouATypist
                 prompt = output_line(stream);
                 response = scanner.nextLine() + '\n';
                 characters_typed += response.length();
-                errors += count_errors(prompt, response);
                 error_comparisons = add_to_error_comparisons(prompt,
                                                              response,
                                                              error_comparisons);
@@ -44,11 +42,13 @@ public class LearnYouATypist
 
             double time = (double) time_taken;
             double chars = (double) characters_typed;
+            int errors = error_comparisons.size() / 2;
             words_per_minute = (chars / WORD_LENGTH) / (time / MINUTE);
 
-            System.out.println("errors: " + errors);
-            System.out.println("error rate: " + ((double) errors) / chars);
             System.out.println("words per minute: " + words_per_minute);
+            System.out.println("error rate: " +
+                               ((double) errors) / (chars / WORD_LENGTH));
+            System.out.println("mistakes: " + errors);
             if (error_comparisons.size() > 0) {
                 System.out.println("summary of mistakes: ");
                 for (int i = 0; i < error_comparisons.size(); i += 2) {
@@ -96,19 +96,6 @@ public class LearnYouATypist
             prompt += '\n';
         }
         return prompt;
-    }
-
-    private static int count_errors(String prompt, String response)
-    {
-        int errors = 0;
-        for (int i = 0; i < Math.min(prompt.length(), response.length()); i++) 
-        {
-            if (prompt.charAt(i) != response.charAt(i)) {
-                errors += 1;
-            }
-        }
-        errors += Math.abs(prompt.length() - response.length());
-        return errors;
     }
 
     //returns a list of words typed incorrectly so the user can see what kinds
