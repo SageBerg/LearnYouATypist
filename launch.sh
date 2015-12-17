@@ -1,2 +1,2 @@
 javac LearnYouATypist.java
-java LearnYouATypist
+java LearnYouATypist lessons

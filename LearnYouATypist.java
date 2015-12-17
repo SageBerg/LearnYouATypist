@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -12,7 +13,8 @@ public class LearnYouATypist
 
     public static void main (String args[]) 
     {
-
+        String lesson_directory = args[0];
+            
         Scanner scanner = new Scanner(System.in);
         String prompt;
         String response;
@@ -26,7 +28,10 @@ public class LearnYouATypist
         ArrayList<String> error_comparisons = new ArrayList<String>();
 
         try {
-            stream = new FileInputStream("test.txt"); 
+            String lesson_file_name =
+                get_random_lesson_file_name(lesson_directory);
+            stream = new FileInputStream(lesson_directory + "/" +
+                                         lesson_file_name);
             while (stream.available() > 0)
             {
                 prompt = output_line(stream);
@@ -71,7 +76,20 @@ public class LearnYouATypist
 
     }
 
-    private static String output_line(FileInputStream stream) throws IOException
+    private static String get_random_lesson_file_name(String lesson_directory)
+    {
+        File[] files = new File(lesson_directory).listFiles();
+        ArrayList<String> lessons = new ArrayList<String>();
+        for (File file : files) {
+            if (!file.isDirectory()) {
+                lessons.add(file.getName());
+            }
+        }
+        return lessons.get((int) (Math.random() * lessons.size() + 1));
+    }
+
+    private static String output_line(FileInputStream stream)
+    throws IOException
     {
         char c = ' ';
         int i;
@@ -106,7 +124,9 @@ public class LearnYouATypist
     {
         String[] split_prompt = prompt.split(" "); 
         String[] split_response = response.split(" "); 
-        for (int i = 0; i < Math.min(split_prompt.length, split_response.length); i++) 
+        for (int i = 0;
+             i < Math.min(split_prompt.length, split_response.length);
+             i++) 
         {
             if (!split_prompt[i].equals(split_response[i])) {
                 list.add(split_prompt[i]);
