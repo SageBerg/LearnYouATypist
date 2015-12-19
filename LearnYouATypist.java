@@ -51,14 +51,14 @@ public class LearnYouATypist
             words_per_minute = (chars / WORD_LENGTH) / (time / MINUTE);
 
             System.out.println("words per minute: " + words_per_minute);
-            System.out.println("error rate: " +
+            System.out.println("mistake rate (by word): " +
                                ((double) errors) / (chars / WORD_LENGTH));
             System.out.println("mistakes: " + errors);
             if (error_comparisons.size() > 0) {
                 System.out.println("summary of mistakes: ");
                 for (int i = 0; i < error_comparisons.size(); i += 2) {
-                    System.out.println(error_comparisons.get(i));
-                    System.out.println(error_comparisons.get(i + 1));
+                    System.out.println("expected: " + error_comparisons.get(i));
+                    System.out.println("you typed: " + error_comparisons.get(i + 1));
                 }
             }
 
@@ -99,14 +99,12 @@ public class LearnYouATypist
                && (i = stream.read()) != -1)
         {
             c = (char) i;
-            if (c == '\n') {
-                System.out.print((char) CRLF_SYMBOL);
-            }
-            System.out.print(c);
             prompt += c;
             if (c == '\n') {
+                System.out.println((char) CRLF_SYMBOL);
                 break;
             }
+            System.out.print(c);
             count += 1;
         }
         if (c != '\n') {
